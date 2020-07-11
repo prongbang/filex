@@ -3,7 +3,6 @@
 File management for Golang
 
 [![Build Status](http://img.shields.io/travis/prongbang/filex.svg)](https://travis-ci.org/prongbang/filex)
-[![Codecov](https://img.shields.io/codecov/c/github/prongbang/filex.svg)](https://codecov.io/gh/prongbang/filex)
 [![Go Report Card](https://goreportcard.com/badge/github.com/prongbang/filex)](https://goreportcard.com/report/github.com/prongbang/filex)
 
 
