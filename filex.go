@@ -28,11 +28,12 @@ func (f *fileX) Mkdir(dirName string) bool {
 		errDir := os.MkdirAll(dirName, 0755)
 		if errDir != nil {
 			log.Println(errDir)
+			return false
 		}
 		return true
 	}
 	if src.Mode().IsRegular() {
-		log.Println(dirName, "already exist as a file!")
+		log.Println(dirName, "Already exist.")
 		return false
 	}
 	return false
