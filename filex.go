@@ -12,9 +12,11 @@ import (
 	"path/filepath"
 )
 
+// FileX is a interface
 type FileX interface {
 	CreateMultipart(path string, filename string, file *multipart.FileHeader) (string, error)
 	CreateImage(imgByte []byte, path string) (string, error)
+	CreateFile(path string, fileName string, data string) (string, error)
 	Delete(path string) (string, error)
 	Mkdir(dirName string) bool
 }
@@ -95,6 +97,29 @@ func (f *fileX) CreateImage(imgByte []byte, path string) (string, error) {
 	return "", nil
 }
 
+func (f *fileX) CreateFile(path string, fileName string, data string) (string, error) {
+	f.Mkdir(path)
+	pathFile := fmt.Sprintf("%s/%s", path, fileName)
+	file, err := os.Create(pathFile)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	_, err = file.WriteString(data)
+	if err != nil {
+		file.Close()
+		return "", err
+	}
+
+	err = file.Close()
+	if err != nil {
+		return "", err
+	}
+
+	return pathFile, err
+}
+
+// New a instance
 func New() FileX {
 	return &fileX{}
 }
