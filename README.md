@@ -42,8 +42,14 @@ var file *multipart.FileHeader = mockFile
 pathFile, err := fileX.CreateMultipart(path, filename, file)
 ```
 
-- Delete
+- Delete file
 
 ```go
 path, err := fileX.Delete(imgPath)
+```
+
+- Delete directory
+
+```go
+err := fileX.DeleteDir("dir")
 ```

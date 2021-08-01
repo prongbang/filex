@@ -18,6 +18,7 @@ type FileX interface {
 	CreateImage(imgByte []byte, path string) (string, error)
 	CreateFile(path string, fileName string, data string) (string, error)
 	Delete(path string) (string, error)
+	DeleteDir(path string) error
 	Mkdir(dirName string) bool
 }
 
@@ -74,6 +75,10 @@ func (f *fileX) Delete(path string) (string, error) {
 		return "", err
 	}
 	return path, nil
+}
+
+func (f *fileX) DeleteDir(path string) error {
+	return os.RemoveAll(path)
 }
 
 func (f *fileX) CreateImage(imgByte []byte, path string) (string, error) {
