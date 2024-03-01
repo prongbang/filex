@@ -20,6 +20,7 @@ type FileX interface {
 	Delete(path string) (string, error)
 	DeleteDir(path string) error
 	Mkdir(dirName string) bool
+	Read(path string) []byte
 }
 
 type fileX struct {
@@ -47,7 +48,9 @@ func (f *fileX) CreateMultipart(path string, filename string, file *multipart.Fi
 	if err != nil {
 		return "", err
 	}
-	defer src.Close()
+	defer func(src multipart.File) {
+		_ = src.Close()
+	}(src)
 
 	ext := filepath.Ext(file.Filename)
 	filePath := fmt.Sprintf("%s%s", filename, ext)
@@ -58,7 +61,9 @@ func (f *fileX) CreateMultipart(path string, filename string, file *multipart.Fi
 	if err != nil {
 		return "", err
 	}
-	defer dst.Close()
+	defer func(dst *os.File) {
+		_ = dst.Close()
+	}(dst)
 
 	if _, err = io.Copy(dst, src); err != nil {
 		return "", err
@@ -89,7 +94,9 @@ func (f *fileX) CreateImage(imgByte []byte, path string) (string, error) {
 	}
 
 	out, _ := os.Create(path)
-	defer out.Close()
+	defer func(out *os.File) {
+		_ = out.Close()
+	}(out)
 
 	var opts jpeg.Options
 	opts.Quality = 100
@@ -112,7 +119,7 @@ func (f *fileX) CreateFile(path string, fileName string, data string) (string, e
 
 	_, err = file.WriteString(data)
 	if err != nil {
-		file.Close()
+		_ = file.Close()
 		return "", err
 	}
 
@@ -122,6 +129,14 @@ func (f *fileX) CreateFile(path string, fileName string, data string) (string, e
 	}
 
 	return pathFile, err
+}
+
+func (f *fileX) Read(path string) []byte {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return []byte{}
+	}
+	return data
 }
 
 // New a instance
